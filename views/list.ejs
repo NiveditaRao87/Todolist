@@ -1,0 +1,61 @@
+<%- include("header") -%>
+<div class="container content">
+  <div class="row">
+    <div class="col-11"></div>
+<!-- To move the delete button to the far right as Bootstrap container has been used -->
+    <div class="col-1">
+      <form action="/delete" method="post">
+        <button type="submit" class="trash" name="list" value="<%= listTitle %>"><i class="fas fa-trash-alt"></i></button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+
+      <div class="box" id="heading">
+        <h1> <%= listTitle %> </h1>
+      </div>
+
+      <div class="box">
+        <% newListItems.forEach(function(item) { if(!(item.checked)){%>
+        <form action="/toggle" method="post">
+          <input type="hidden" name="list" value="<%= listTitle %>">
+<!-- Hidden input to set the value of the checked field to true to complete the task -->
+          <input type="hidden" name="checked" value="true">
+          <div class="item">
+            <input type="checkbox" name="itemId" value="<%= item._id %>" onChange="this.form.submit()">
+            <p><%=  item.name  %></p>
+          </div>
+        </form>
+        <% }}) %>
+
+        <form class="item" action="/" method="post">
+          <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+          <button type="submit" name="list" value="<%= listTitle %>">+</button>
+        </form>
+      </div>
+
+    </div>
+<!-- The Completed task list Shows the list of items which have the checked field set to true -->
+    <div class="col-6">
+      <div class="box" id="heading">
+        <h1>Complete</h1>
+      </div>
+      <div class="box">
+        <% newListItems.forEach(function(item) { if(item.checked){ %>
+        <form action="/toggle" method="post">
+          <input type="hidden" name="list" value="<%= listTitle %>">
+          <input type="hidden" name="checked" value="false">
+          <div class="item">
+            <input type="hidden" name="itemId" value="<%= item._id %>">
+<!-- When checkbox was marked as checked it was not possible to send the parameter using the name value pair in checkbox so a hidden input was used -->
+            <input type="checkbox" onClick="this.form.submit()" checked>
+            <p><%=  item.name  %></p>
+          </div>
+        </form>
+        <% }}) %>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("footer") -%>
